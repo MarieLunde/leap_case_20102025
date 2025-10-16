@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: bike_sales_dbt
+    database: BIKE_SALES
+    schema: BIKES_SALES
+    tables:
+      - name: '"11_PRODUCTS"'
+        description: "Product data from the Marketplace dataset"
+      - name: '"1_SALES"'
+        description: "Sales transaction data from the Marketplace dataset"
