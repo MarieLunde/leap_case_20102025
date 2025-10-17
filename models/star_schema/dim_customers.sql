@@ -3,6 +3,7 @@
 -- Base: latest valid snapshot records
 WITH current_customer AS (
     SELECT
+        row_number() OVER (ORDER BY customer_id) AS sk_customer,  -- surrogate key
         customer_id,
         customer_name,
         gender,
@@ -29,6 +30,7 @@ SELECT * FROM (
         model_relation="current_customer",
         unknown_key_name="customer_id",
         unknown_values=[
+            "-1 AS sk_customer",
             "-1 AS customer_id",
             "'Unknown Customer' AS customer_name",
             "'Unknown' AS gender",

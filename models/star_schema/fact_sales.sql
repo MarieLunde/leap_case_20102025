@@ -1,7 +1,8 @@
-{{ config(materialized="table") }}
+{{ config(materialized='incremental', unique_key='sale_id') }}
 
 SELECT
-    -- Primary keys and foreign keys
+    -- Keys
+    row_number() OVER (ORDER BY sale_id) AS sk_sales,  -- surrogate key
     sale_id,
     sales_order_number,
     customer_id,

@@ -3,6 +3,7 @@
 -- Base: latest valid snapshot records
 WITH current_product AS (
     SELECT
+        row_number() OVER (ORDER BY product_id) AS sk_product,  -- surrogate key
         product_id,
         product_subcategory_id,
         product_name,
@@ -32,6 +33,7 @@ SELECT * FROM (
         model_relation="current_product",
         unknown_key_name="product_id",
         unknown_values=[
+            "-1 AS sk_product",
             "-1 AS product_id",
             "-1 AS product_subcategory_id",
             "'Unknown Product' AS product_name",

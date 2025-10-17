@@ -19,6 +19,7 @@ with date_spine as (
 date_dimension as (
 
     select
+        row_number() OVER (ORDER BY date_day) AS sk_date,
         cast(to_char(date_day, 'YYYYMMDD') as number) as date_id,  -- numeric surrogate key
         date_day as date,
         extract(year from date_day) as year,
@@ -37,4 +38,24 @@ date_dimension as (
     from date_spine
 )
 
-select * from date_dimension
+select * from (
+    {{ add_unknown_row(
+        model_relation="date_dimension",
+        unknown_key_name="sk_date",
+        unknown_values=[
+            "-1 AS sk_date",
+            "-1 AS date_id",
+            "NULL AS date",
+            "NULL AS year",
+            "NULL AS quarter",
+            "NULL AS month",
+            "'Unknown' AS month_name",
+            "NULL AS day",
+            "'Unknown' AS day_name",
+            "NULL AS day_of_week",
+            "NULL AS week_of_year",
+            "'Unknown' AS date_string",
+            "NULL AS is_weekend"
+        ]
+    ) }}
+)
