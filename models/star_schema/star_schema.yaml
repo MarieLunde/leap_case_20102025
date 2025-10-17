@@ -1,0 +1,127 @@
+version: 2
+
+models:
+  - name: dim_geography
+    description: >
+      Geography dimension containing location and regional information for customers.
+      Includes standardized fields for country, state, city, and postal codes.
+      Also includes an "Unknown" row (key = -1) to handle missing references in fact tables.
+    columns:
+      - name: geography_id
+        description: "Unique identifier for the geography record."
+        tests:
+          - unique
+          - not_null
+
+      - name: city
+        description: "Name of the city."
+      - name: state_province_name
+        description: "Full name of the state or province."
+      - name: state_province_code
+        description: "Abbreviated code for the state or province."
+      - name: postal_code
+        description: "Postal or ZIP code for the location."
+      - name: customer_country
+        description: "Full name of the customer’s country."
+      - name: country_region_code
+        description: "Two-letter region or country code."
+      - name: ip_address_locator
+        description: "Geographic locator string derived from IP address (if available)."
+
+  - name: dim_products
+    description: >
+      Product dimension including historical changes tracked via snapshot.
+      Also includes an "Unknown" row (key = -1) to handle missing references in fact tables.
+    columns:
+      - name: product_id
+        description: "Unique identifier for each product."
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_customers
+    description: >
+      Customer dimension including historical changes tracked via snapshot.
+      Also includes an "Unknown" row (key = -1) to handle missing references in fact tables.
+    columns:
+      - name: customer_id
+        description: "Unique identifier for each customer."
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_subproducts
+    description: >
+      Subproducts dimension including historical changes tracked via snapshot.
+      Also includes an "Unknown" row (key = -1) to handle missing references in fact tables.
+    columns:
+      - name: sk_subproduct
+        description: "Unique identifier for each subproduct."
+        tests:
+          - unique
+          - not_null
+
+
+  - name: dim_date
+    description: "Date dimension providing calendar and time attributes for reporting."
+    columns:
+      - name: date_id
+        description: "Primary key for the date dimension."
+        tests:
+          - unique
+          - not_null
+      - name: year
+        description: "Calendar year."
+      - name: quarter
+        description: "Calendar quarter."
+      - name: month
+        description: "Calendar month."
+      - name: month_name
+        description: "Full name of the month."
+      - name: day
+        description: "Day of the month."
+      - name: day_name
+        description: "Full name of the day."
+      - name: is_weekend
+        description: "Boolean indicating if the date is a weekend."
+
+  
+  - name: fact_sales
+    description: >
+      Base sales fact table containing one record per sale.
+      Includes identifiers, dates, and financial measures, with
+      no dimension joins applied yet.
+    columns:
+      - name: sale_id
+        description: "Primary key for each sales record."
+        tests:
+          - not_null
+          - unique
+      - name: sales_order_number
+        description: "Sales order identifier from the source system."
+        tests:
+          - not_null
+      - name: customer_id
+        description: "Foreign key referencing the customer dimension."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_id
+      - name: product_id
+        description: "Foreign key referencing the product dimension."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: product_id
+      - name: order_date_id
+        description: "Foreign key referencing the order date in dim_date."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_id
