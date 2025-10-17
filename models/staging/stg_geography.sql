@@ -1,7 +1,7 @@
 {{ config(materialized="view") }}
 
 select
-    cast(geographykey as number) as geography_key,
+    cast(geographykey as number) as geography_id,
     cast(city as string) as city,
     cast(stateprovincecode as string) as state_province_code,
     cast(stateprovincename as string) as state_province_name,

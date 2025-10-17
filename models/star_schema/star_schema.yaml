@@ -1,0 +1,71 @@
+version: 2
+
+models:
+  - name: dim_geography
+    description: >
+      Geography dimension containing location and regional information for customers.
+      Includes standardized fields for country, state, city, and postal codes.
+      Also includes an "Unknown" row (key = -1) to handle missing references in fact tables.
+    columns:
+      - name: geography_id
+        description: "Unique identifier for the geography record."
+        tests:
+          - unique
+          - not_null
+
+      - name: city
+        description: "Name of the city."
+      - name: state_province_name
+        description: "Full name of the state or province."
+      - name: state_province_code
+        description: "Abbreviated code for the state or province."
+      - name: postal_code
+        description: "Postal or ZIP code for the location."
+      - name: customer_country
+        description: "Full name of the customer’s country."
+      - name: country_region_code
+        description: "Two-letter region or country code."
+      - name: ip_address_locator
+        description: "Geographic locator string derived from IP address (if available)."
+
+  - name: dim_products
+    description: >
+      Product dimension including historical changes tracked via snapshot.
+      Also includes an "Unknown" row (key = -1) to handle missing references in fact tables.
+    columns:
+      - name: product_id
+        description: "Unique identifier for each product."
+        tests:
+          - unique
+          - not_null
+  - name: fact_sales
+    description: >
+      Base sales fact table containing one record per sale.
+      Includes identifiers, dates, and financial measures, with
+      no dimension joins applied yet.
+    columns:
+      - name: sale_id
+        description: "Primary key for each sales record."
+        tests:
+          - not_null
+          - unique
+      - name: sales_order_number
+        description: "Sales order identifier from the source system."
+        tests:
+          - not_null
+      - name: customer_id
+        description: "Foreign key referencing the customer dimension."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_id
+      - name: product_id
+        description: "Foreign key referencing the product dimension."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: product_id

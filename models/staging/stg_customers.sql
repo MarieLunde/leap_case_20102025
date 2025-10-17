@@ -1,7 +1,7 @@
 {{ config(materialized="view") }}
 
 select
-    cast(customerkey as number) as customer_key,
+    cast(customerkey as number) as customer_id,
     cast(name as string) as customer_name,
     cast(gender as string) as gender,
     cast(is_male as boolean) as is_male,
@@ -11,10 +11,10 @@ select
     -- Demographics
     cast(age as number) as age,
     try_to_date(birthdate, 'YYYY-MM-DD') as birth_date,
-    cast(houseownerflag as number) as house_owner_flag,
+    cast(houseownerflag as boolean) as is_house_owner,
     cast(numbercarsowned as number) as number_cars_owned,
     try_to_number(numberchildrenathome) as number_children_at_home,
-    try_to_number(yearlyincome) as yearly_income,  -- can cast to numeric if stored as text
+    -- try_to_number(yearlyincome) as yearly_income, Contains only null values
 
     -- Geography and contact
     cast(geographykey as number) as geography_key,
