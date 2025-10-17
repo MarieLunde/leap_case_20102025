@@ -4,7 +4,6 @@ select
     cast(customerkey as number) as customer_id,
     cast(name as string) as customer_name,
     cast(gender as string) as gender,
-    cast(is_male as boolean) as is_male,
     cast(maritalstatus as string) as marital_status,
     cast(occupation as string) as occupation,
 

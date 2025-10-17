@@ -9,11 +9,6 @@ SELECT
     sales_territory_id,
     order_date_id,
 
-    -- Dates and timestamps
-    order_date,
-    order_year,
-    order_timestamp,
-
     -- numbers
     order_quantity,
     unit_price,
