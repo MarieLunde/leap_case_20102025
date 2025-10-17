@@ -3,6 +3,7 @@
 -- Base: latest valid snapshot records
 WITH current_geography AS (
     SELECT
+        row_number() OVER (ORDER BY geography_id) AS sk_geography,  -- surrogate key
         geography_id,
         city,
         state_province_name,
@@ -21,6 +22,7 @@ SELECT * FROM (
         model_relation="current_geography",
         unknown_key_name="geography_id",
         unknown_values=[
+            "-1 AS sk_geography",
             "-1 AS geography_id",
             "'Unknown' AS city",
             "'Unknown' AS state_province_name",
