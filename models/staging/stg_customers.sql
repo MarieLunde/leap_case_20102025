@@ -16,7 +16,7 @@ select
     -- try_to_number(yearlyincome) as yearly_income, Contains only null values
 
     -- Geography and contact
-    cast(geographykey as number) as geography_key,
+    cast(geographykey as number) as geography_id,
     cast(addressline1 as string) as address_line_1,
     cast(addressline2 as string) as address_line_2,
     cast(phone as string) as phone_number,

@@ -49,6 +49,14 @@ models:
         tests:
           - unique
           - not_null
+      - name: sk_geography
+        description: "Foreign key referencing the geography dimension."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_geographys')
+                field: sk_geography
 
   - name: dim_subproducts
     description: >
@@ -101,27 +109,60 @@ models:
         description: "Sales order identifier from the source system."
         tests:
           - not_null
-      - name: customer_id
+      - name: sk_customer
         description: "Foreign key referencing the customer dimension."
         tests:
           - not_null
           - relationships:
               arguments:
                 to: ref('dim_customer')
-                field: customer_id
-      - name: product_id
+                field: sk_customer
+      - name: sk_product
         description: "Foreign key referencing the product dimension."
         tests:
           - not_null
           - relationships:
               arguments:
                 to: ref('dim_products')
-                field: product_id
-      - name: order_date_id
+                field: sk_product
+      - name: sk_order_date
         description: "Foreign key referencing the order date in dim_date."
         tests:
           - not_null
           - relationships:
               arguments:
                 to: ref('dim_date')
-                field: date_id
+                field: sk_date
+      
+      # Derived metrics
+      - name: net_sales_amount
+        description: >
+          Total sales after discounts have been applied.
+          Formula: sales_amount - discount_amount.
+        tests:
+          - not_null
+
+      - name: gross_profit
+        description: >
+          Difference between total sales and total product cost.
+          Formula: sales_amount - total_product_cost.
+
+      - name: profit_margin_pct
+        description: >
+          Profit as a percentage of total sales.
+          Formula: (sales_amount - total_product_cost) / sales_amount * 100.
+
+      - name: tax_pct
+        description: >
+          Tax as a percentage of total sales.
+          Formula: tax_amount / sales_amount * 100.
+
+      - name: total_cost_with_freight_tax
+        description: >
+          Sum of total product cost, freight cost, and tax amount.
+          Formula: total_product_cost + freight_cost + tax_amount.
+
+      - name: revenue_per_unit
+        description: >
+          Average revenue earned per sold unit.
+          Formula: sales_amount / order_quantity.

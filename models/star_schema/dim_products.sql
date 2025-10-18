@@ -25,17 +25,45 @@ WITH current_product AS (
         current_stock
     FROM {{ ref('product_snapshot') }}
     WHERE dbt_valid_to IS NULL
+),
+
+-- Join to dim_subproduct to get surrogate key
+joined_product AS (
+    SELECT
+        p.sk_product,
+        p.product_id,
+        COALESCE(s.sk_subproduct, -1) AS sk_subproduct,                -- use surrogate key from subproduct
+        p.product_name,
+        p.standard_cost,
+        p.color,
+        p.safety_stock_level,
+        p.list_price,
+        p.size_range,
+        p.weight,
+        p.days_to_manufacture,
+        p.product_line,
+        p.dealer_price,
+        p.class,
+        p.model_name,
+        p.description,
+        p.start_date,
+        p.end_date,
+        p.status,
+        p.current_stock
+    FROM current_product p
+    LEFT JOIN {{ ref('dim_subproducts') }} s
+        ON p.product_subcategory_id = s.product_subcategory_id
 )
 
 -- Add 'Unknown' row using macro
 SELECT * FROM (
     {{ add_unknown_row(
-        model_relation="current_product",
+        model_relation="joined_product",
         unknown_key_name="product_id",
         unknown_values=[
             "-1 AS sk_product",
             "-1 AS product_id",
-            "-1 AS product_subcategory_id",
+            "-1 AS sk_subproduct",
             "'Unknown Product' AS product_name",
             "0.0 AS standard_cost",
             "'Unknown' AS color",
