@@ -2,6 +2,7 @@
 
 {{
     config(
+        target_database="BIKE_SALES_CASE",
         target_schema='SNAPSHOTS',
         unique_key=['product_subcategory_id', 'product_category_id'],
         strategy='check',

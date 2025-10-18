@@ -2,6 +2,7 @@
 
 {{
     config(
+        target_database="BIKE_SALES_CASE",
         target_schema='SNAPSHOTS',
         unique_key='customer_id',
         strategy='check',
@@ -15,7 +16,7 @@
             'is_house_owner',
             'number_cars_owned',
             'number_children_at_home',
-            'geography_key',
+            'geography_id',
             'address_line_1',
             'address_line_2',
             'phone_number',
@@ -36,7 +37,7 @@ SELECT
     is_house_owner,
     number_cars_owned,
     number_children_at_home,
-    geography_key,
+    geography_id,
     address_line_1,
     address_line_2,
     phone_number,

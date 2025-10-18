@@ -2,6 +2,7 @@
 
 {{
     config(
+        target_database="BIKE_SALES_CASE",
         target_schema='SNAPSHOTS',     
         unique_key='geography_id',
         strategy='check',              

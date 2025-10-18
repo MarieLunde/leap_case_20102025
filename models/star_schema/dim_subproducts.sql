@@ -5,9 +5,9 @@ WITH current_subcategory AS (
     FROM {{ ref('subproducts_snapshot') }}
     WHERE dbt_valid_to IS NULL
 ),
-sk_subcategory AS (
+cte_subproduct AS (
     SELECT
-        row_number() OVER (ORDER BY product_subcategory_id, product_category_id) AS sk_subproduct,  -- surrogate key
+        row_number() OVER (ORDER BY product_subcategory_id) AS sk_subproduct,  -- surrogate key
         product_subcategory_id,
         product_category_id,
         product_subcategory_name,
@@ -17,7 +17,7 @@ sk_subcategory AS (
 )
 
 {{ add_unknown_row(
-    model_relation="sk_subcategory",
+    model_relation="cte_subproduct",
     unknown_key_name="sk_subproduct",
     unknown_values=[
         "-1 AS sk_subproduct",
